@@ -35,24 +35,28 @@ void MainWindow::on_connectButton_clicked()
         //TCP连接
         int port = _PORT;
         socket = new QTcpSocket(this);
-        socket->connectToHost(_IP,port);
+        socket->abort();
+        socket->connectToHost(QHostAddress(_IP),port);
 
         //连接槽
+
         connect(socket,SIGNAL(readyRead()),this,SLOT(socket_readPendingDatagrams()));
         connect(socket,SIGNAL(disconnected()),this,SLOT(socket_disconnect()));
+        connect(socket,SIGNAL(connected()),this,SLOT(socket_connected()));
 
         //ui更新
-        ui->connectButton->setText(QString::fromUtf8("断开"));
+        //ui->connectButton->setText(QString::fromUtf8("断开"));
 
     }
     else
     {
         //TCP关闭
         socket->close();
+        socket->abort();
         disconnect(socket,SIGNAL(readyRead()),this,SLOT(socket_readPendingDatagrams()));
 
         //UI更新
-        ui->connectButton->setText(QString::fromUtf8("连接"));
+        //ui->connectButton->setText(QString::fromUtf8("连接"));
     }
 }
 
@@ -60,6 +64,51 @@ void MainWindow::socket_readPendingDatagrams()
 {
     //接受数据
     isReceved = 1;
+
+    while (socket->bytesAvailable()>0)
+    {
+        char buf[1024];
+        int length=socket->bytesAvailable();
+        socket->read(buf, length);
+        QString msg;
+
+        if(length != 16)
+        {
+            char* outChar = buf+16;
+            QString str = QString("%1").arg(outChar);
+            msg+=str+"\n";
+
+            QByteArray qstr = str.toLatin1();
+            QJsonParseError json_error;
+            QJsonDocument jsonDoc(QJsonDocument::fromJson(qstr,&json_error));
+
+            if(json_error.error!= QJsonParseError::NoError)
+            {
+                QMessageBox::warning(NULL,"Warning",QString::fromUtf8("Json解析错误"),QMessageBox::Yes);
+                return;
+            }
+
+            QJsonObject rootObj = jsonDoc.object();
+            QStringList keys = rootObj.keys();
+            for(int i = 0; i < keys.size(); i++)
+            {
+                msg += keys.at(i) + " : " + rootObj.value(keys.at(i)).toString() + "\n";
+            }
+            QMessageBox::warning(NULL,"Warning",msg,QMessageBox::Yes);
+        }
+    }
+}
+
+void MainWindow::socket_connected()
+{
+    ui->connectButton->setText(QString::fromUtf8("断开"));
+    isReceved = 1;
+}
+
+void MainWindow::socket_disconnect()
+{
+    QMessageBox::warning(NULL,"Title",QString::fromUtf8("连接断开"),QMessageBox::Yes);
+    ui->connectButton->setText(QString::fromUtf8("连接"));
 }
 
 int MainWindow::packetCreate(int APICode, int packetId, char* jsonData,char *data)
@@ -97,9 +146,15 @@ void MainWindow::on_deleButton_clicked()
 
 void MainWindow::on_takeButton_clicked()
 {
-
-
-    if(isReceved && socket->isOpen())
+    if(!socket->isOpen())
+    {
+        QMessageBox::warning(NULL,"Warning",QString::fromUtf8("请连接！"),QMessageBox::Yes);
+    }
+    else if(!isReceved)
+    {
+        QMessageBox::warning(NULL,"Warning",QString::fromUtf8("等待上一条命令执行！"),QMessageBox::Yes);
+    }
+    else
     {
         QPushButton *btn = (QPushButton*)sender();
         QString position = btn->property("position").toString();
@@ -118,13 +173,13 @@ void MainWindow::on_takeButton_clicked()
         }
         else if(position == "B")
         {
-            char json_data[] = "{\"name\":\"tasks1_3\"}";
+            char json_data[] = "{\"name\":\"tasks2_3\"}";
             memcpy(json,json_data,strlen(json_data));
             json[strlen(json_data)] = 0;
         }
         else if(position == "C")
         {
-            char json_data[] = "{\"name\":\"tasks1_4\"}";
+            char json_data[] = "{\"name\":\"tasks3_4\"}";
             memcpy(json,json_data,strlen(json_data));
             json[strlen(json_data)] = 0;
         }
@@ -139,19 +194,21 @@ void MainWindow::on_takeButton_clicked()
 
         isReceved = 0;
     }
-    else
-    {
-        QMessageBox::warning(NULL,QString::fromUtf8("警告"),QString::fromUtf8("等待上一条指令执行！"),QMessageBox::Yes);
-    }
 
     //QMessageBox::information(NULL,"title",position,QMessageBox::Yes);
 }
 
 void MainWindow::on_deliverButton_clicked()
 {
-
-
-    if(isReceved && socket->isOpen())
+    if(!socket->isOpen())
+    {
+        QMessageBox::warning(NULL,"Warning",QString::fromUtf8("请连接！"),QMessageBox::Yes);
+    }
+    else if(!isReceved)
+    {
+        QMessageBox::warning(NULL,"Warning",QString::fromUtf8("等待上一条命令执行！"),QMessageBox::Yes);
+    }
+    else
     {
         QPushButton *btn = (QPushButton*)sender();
         QString position = btn->property("position").toString();
@@ -190,10 +247,6 @@ void MainWindow::on_deliverButton_clicked()
         socket->write(data,len);
 
         isReceved = 0;
-    }
-    else
-    {
-        QMessageBox::warning(NULL,QString::fromUtf8("警告"),QString::fromUtf8("等待上一条指令执行！"),QMessageBox::Yes);
     }
 
     //QMessageBox::information(NULL,"title",position,QMessageBox::Yes);
@@ -247,7 +300,7 @@ void MainWindow::freshTable()
 
             QPushButton *deliverButton = new QPushButton();
             deliverButton->setText("送货");
-            deliverButton->setProperty("position","B");
+            deliverButton->setProperty("position",position);
             connect(deliverButton,SIGNAL(clicked()),this,SLOT(on_deliverButton_clicked()));
             ui->tableWidget->setCellWidget(i,4,deliverButton);
 
@@ -266,7 +319,4 @@ void MainWindow::on_refreshButton_clicked()
     freshTable();
 }
 
-void MainWindow::socket_disconnect()
-{
-    ui->connectButton->setText("连接");
-}
+
