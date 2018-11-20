@@ -70,6 +70,7 @@ void MainWindow::socket_readPendingDatagrams()
         char buf[1024];
         int length=socket->bytesAvailable();
         socket->read(buf, length);
+        buf[length] = 0;
         QString msg;
 
         if(length != 16)
@@ -85,7 +86,7 @@ void MainWindow::socket_readPendingDatagrams()
             if(json_error.error!= QJsonParseError::NoError)
             {
                 QMessageBox::warning(NULL,"Warning",QString::fromUtf8("Json解析错误"),QMessageBox::Yes);
-                return;
+                break;
             }
 
             QJsonObject rootObj = jsonDoc.object();
@@ -94,7 +95,7 @@ void MainWindow::socket_readPendingDatagrams()
             {
                 msg += keys.at(i) + " : " + rootObj.value(keys.at(i)).toString() + "\n";
             }
-            QMessageBox::warning(NULL,"Warning",msg,QMessageBox::Yes);
+            QMessageBox::information(NULL,"information",msg,QMessageBox::Yes);
         }
     }
 }
@@ -185,7 +186,7 @@ void MainWindow::on_takeButton_clicked()
         }
         else if(position == "D")
         {
-            char json_data[] = "{\"name\":\"tasks1_5\"}";
+            char json_data[] = "{\"name\":\"tasks4_5\"}";
             memcpy(json,json_data,strlen(json_data));
             json[strlen(json_data)] = 0;
         }
@@ -320,3 +321,17 @@ void MainWindow::on_refreshButton_clicked()
 }
 
 
+
+void MainWindow::on_resetButton_clicked()
+{
+    socket->close();
+    socket->abort();
+    isReceved = 1;
+
+    for(int i=0;i<ui->tableWidget->rowCount();i++)
+    {
+        ui->tableWidget->item(i,2)->setText(QString::fromUtf8("等待"));
+    }
+
+    freshTable();
+}

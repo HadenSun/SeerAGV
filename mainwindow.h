@@ -53,6 +53,8 @@ private slots:
     void socket_disconnect();
     void socket_connected();
 
+    void on_resetButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QTcpSocket *socket;
