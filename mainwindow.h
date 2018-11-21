@@ -12,7 +12,7 @@
 
 #define _IP "127.0.0.1"
 #define _PORT 19206
-#define _POINT_NUMBER 3
+#define _POINT_NUMBER 2
 #define _ID_NUMBER 2034
 #define _VERTICAL
 

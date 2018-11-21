@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle(QString::fromUtf8("仓储调度"));                  //修改标题
     setAutoFillBackground(true);                //修改背景颜色，必须有这条语句
     setPalette(QPalette(QColor(255,204,1)));
-    QPixmap pixmap("DHL.jpg");                  //加载logo
+    QPixmap pixmap("C:\\Users\\ayshx\\Documents\\AGV\\SeerAGV\\SeerAGV\\DHL.jpg");                  //加载logo
     QPixmap fitpixmap = pixmap.scaled(480, 200, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     ui->label->setPixmap(fitpixmap);
     showMaximized();
@@ -174,19 +174,19 @@ void MainWindow::on_takeButton_clicked()
         }
         else if(position == "B")
         {
-            char json_data[] = "{\"name\":\"tasks2_3\"}";
+            char json_data[] = "{\"name\":\"tasks1_3\"}";
             memcpy(json,json_data,strlen(json_data));
             json[strlen(json_data)] = 0;
         }
         else if(position == "C")
         {
-            char json_data[] = "{\"name\":\"tasks3_4\"}";
+            char json_data[] = "{\"name\":\"tasks1_4\"}";
             memcpy(json,json_data,strlen(json_data));
             json[strlen(json_data)] = 0;
         }
         else if(position == "D")
         {
-            char json_data[] = "{\"name\":\"tasks4_5\"}";
+            char json_data[] = "{\"name\":\"tasks1_5\"}";
             memcpy(json,json_data,strlen(json_data));
             json[strlen(json_data)] = 0;
         }
