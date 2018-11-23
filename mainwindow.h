@@ -10,7 +10,7 @@
 
 
 
-#define _IP "127.0.0.1"
+#define _IP "192.168.10.101"
 #define _PORT 19206
 #define _POINT_NUMBER 2
 #define _ID_NUMBER 2034
@@ -54,6 +54,8 @@ private slots:
     void socket_connected();
 
     void on_resetButton_clicked();
+
+    void on_autoButton_clicked();
 
 private:
     Ui::MainWindow *ui;

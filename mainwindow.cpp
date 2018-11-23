@@ -335,3 +335,29 @@ void MainWindow::on_resetButton_clicked()
 
     freshTable();
 }
+
+void MainWindow::on_autoButton_clicked()
+{
+    if(!socket->isOpen())
+    {
+        QMessageBox::warning(NULL,"Warning",QString::fromUtf8("请连接！"),QMessageBox::Yes);
+    }
+    else if(!isReceved)
+    {
+        QMessageBox::warning(NULL,"Warning",QString::fromUtf8("等待上一条命令执行！"),QMessageBox::Yes);
+    }
+    else
+    {
+        char data[100];
+        char json[100];
+
+        char json_data[] = "{\"name\":\"tasks_re\"}";
+        memcpy(json,json_data,strlen(json_data));
+        json[strlen(json_data)] = 0;
+
+        int len = packetCreate(3106,12,json,data);
+        socket->write(data,len);
+
+        isReceved = 0;
+    }
+}
