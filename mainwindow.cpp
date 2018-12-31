@@ -11,8 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle(QString::fromUtf8("仓储调度"));                  //修改标题
     setAutoFillBackground(true);                //修改背景颜色，必须有这条语句
     setPalette(QPalette(QColor(255,204,1)));
-    QPixmap pixmap("C:\\Users\\ayshx\\Documents\\AGV\\SeerAGV\\SeerAGV\\DHL.jpg");                  //加载logo
-    QPixmap fitpixmap = pixmap.scaled(480, 200, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QPixmap pixmap("DHL.jpg");                  //加载logo
+    QPixmap fitpixmap = pixmap.scaled(300, 200, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     ui->label->setPixmap(fitpixmap);
     showMaximized();
     id_number = _ID_NUMBER;
@@ -263,9 +263,9 @@ void MainWindow::freshTable()
     if(count == 0)
     {
         ui->tableWidget->setColumnCount(6);
-        ui->tableWidget->setColumnWidth(0,1100);
-        ui->tableWidget->setColumnWidth(1,400);
-        ui->tableWidget->setColumnWidth(2,400);
+        ui->tableWidget->setColumnWidth(0,500);
+        ui->tableWidget->setColumnWidth(1,180);
+        ui->tableWidget->setColumnWidth(2,180);
         ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);    //禁止编辑
         ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectItems);
         ui->tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -279,7 +279,7 @@ void MainWindow::freshTable()
         for(int i = count; i < 40;i++)
         {
             ui->tableWidget->insertRow(i);              //插入行
-            ui->tableWidget->setRowHeight(i,100);       //设置行高
+            ui->tableWidget->setRowHeight(i,40);       //设置行高
 
             QDateTime data = QDateTime::currentDateTime();
             QString data_string = data.toString("yyyyMMdd");

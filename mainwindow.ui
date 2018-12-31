@@ -22,7 +22,7 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>250</height>
+          <height>40</height>
          </size>
         </property>
         <property name="text">
@@ -34,7 +34,7 @@
        <widget class="QPushButton" name="connectButton">
         <property name="maximumSize">
          <size>
-          <width>200</width>
+          <width>150</width>
           <height>16777215</height>
          </size>
         </property>
@@ -53,7 +53,7 @@
        <widget class="QPushButton" name="refreshButton">
         <property name="maximumSize">
          <size>
-          <width>200</width>
+          <width>150</width>
           <height>16777215</height>
          </size>
         </property>
@@ -78,7 +78,7 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>200</width>
+          <width>150</width>
           <height>16777215</height>
          </size>
         </property>
@@ -103,7 +103,7 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>200</width>
+          <width>150</width>
           <height>16777215</height>
          </size>
         </property>
@@ -155,7 +155,7 @@
          <x>0</x>
          <y>0</y>
          <width>2715</width>
-         <height>1435</height>
+         <height>1640</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -175,8 +175,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>2691</width>
-          <height>1361</height>
+          <width>1240</width>
+          <height>616</height>
          </rect>
         </property>
         <property name="sizePolicy">

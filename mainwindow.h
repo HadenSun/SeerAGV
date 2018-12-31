@@ -10,7 +10,7 @@
 
 
 
-#define _IP "192.168.10.101"
+#define _IP "192.168.10.107"
 #define _PORT 19206
 #define _POINT_NUMBER 2
 #define _ID_NUMBER 2034
